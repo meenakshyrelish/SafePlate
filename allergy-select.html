@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafePlate — Select Allergies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="select-page">
+    <h1 class="select-headline">What are you allergic to?</h1>
+    <p class="select-subtext">Select all that apply</p>
+
+    <div class="allergy-grid">
+      <button class="allergy-pill" data-allergy="Peanuts">Peanuts</button>
+      <button class="allergy-pill" data-allergy="Shellfish">Shellfish</button>
+      <button class="allergy-pill" data-allergy="Tree Nuts">Tree Nuts</button>
+      <button class="allergy-pill" data-allergy="Eggs">Eggs</button>
+      <button class="allergy-pill" data-allergy="Dairy">Dairy</button>
+      <button class="allergy-pill" data-allergy="Soy">Soy</button>
+      <button class="allergy-pill" data-allergy="Gluten">Gluten</button>
+      <button class="allergy-pill custom-pill" id="customBtn">+ Custom</button>
+    </div>
+
+    <button class="submit-btn" id="submitBtn" disabled>Submit</button>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+:root {
+  --primary: #2E7D32;
+  --primary-light: #66BB6A;
+  --background: #FAFAFA;
+  --text-dark: #1A1A1A;
+  --text-muted: #6B6B6B;
+
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background: var(--background);
+  color: var(--text-dark);
+}
+
+.navbar {
+  padding: var(--space-lg) var(--space-xl);
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: var(--primary);
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+              url('../assets/images/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+}
+
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 var(--space-lg);
+}
+
+.headline {
+  font-size: 3rem;
+  font-weight: 700;
+  color: white;           /* changed from text-dark */
+  animation: slideIn 0.8s ease-out;
+}
+
+.subtext {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);  /* changed from text-muted */
+  margin-top: var(--space-md);
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: white;            
+}
+
+.cta-btn {
+  margin-top: var(--space-xl);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  animation: fadeIn 1s ease-out 0.5s both;
+  transition: background 0.2s;
+}
+
+.cta-btn:hover {
+  background: var(--primary-light);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ---- Allergy Select Page ---- */
+
+.select-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xl);
+  background: var(--background);
+}
+
+.select-headline {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  text-align: center;
+}
+
+.select-subtext {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: var(--space-sm);
+  margin-bottom: var(--space-xl);
+}
+
+.allergy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  max-width: 500px;
+  width: 100%;
+}
+
+.allergy-pill {
+  padding: var(--space-md) var(--space-lg);
+  border: 2px solid #E0E0E0;
+  border-radius: 999px;
+  background: white;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.allergy-pill:hover {
+  border-color: var(--primary-light);
+}
+
+.allergy-pill.selected {
+  background: var(--safe-tag);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.custom-pill {
+  color: var(--text-muted);
+  border-style: dashed;
+}
+
+.submit-btn {
+  margin-top: var(--space-xl);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: var(--primary-light);
+}
+
+.submit-btn:disabled {
+  background: #CCCCCC;
+  cursor: not-allowed;
+}
