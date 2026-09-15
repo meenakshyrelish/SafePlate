@@ -11,8 +11,16 @@ const {
   findUserById,
   createSession,
   getSessionUser,
-  deleteSession
+  deleteSession,
+  setUserAllergies,
+  getUserAllergies
 } = require('./database.js');
+
+const {
+  getDefaultMeals,
+  searchMeals,
+  personalizeRecipe
+} = require('./recipes.js');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -67,10 +75,15 @@ app.get('/allergy-select.html', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, 'allergy-select.html'));
 });
 
+app.get('/meals.html', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, 'meals.html'));
+});
+
 // Friendly aliases
 app.get('/login', (req, res) => res.redirect('/login.html'));
 app.get('/signup', (req, res) => res.redirect('/signup.html'));
 app.get('/allergy-select', (req, res) => res.redirect('/allergy-select.html'));
+app.get('/meals', (req, res) => res.redirect('/meals.html'));
 
 // 4. API Endpoints
 
@@ -257,6 +270,97 @@ app.get('/api/auth/me', (req, res) => {
     authenticated: false,
     user: null
   });
+});
+
+/**
+ * GET /api/user/allergies
+ * Retrieve saved allergies for authenticated user from database
+ */
+app.get('/api/user/allergies', requireAuth, (req, res) => {
+  try {
+    const allergies = getUserAllergies(req.user.id);
+    return res.status(200).json({ success: true, allergies });
+  } catch (err) {
+    console.error('Error fetching user allergies:', err);
+    return res.status(500).json({ error: 'ServerError', message: 'Failed to retrieve allergies.' });
+  }
+});
+
+/**
+ * POST /api/user/allergies
+ * Save user allergies into database profile
+ */
+app.post('/api/user/allergies', requireAuth, (req, res) => {
+  try {
+    const { allergies } = req.body;
+    if (!Array.isArray(allergies)) {
+      return res.status(400).json({ error: 'ValidationError', message: 'Allergies must be provided as an array.' });
+    }
+    const saved = setUserAllergies(req.user.id, allergies);
+    return res.status(200).json({ success: true, allergies: saved });
+  } catch (err) {
+    console.error('Error saving user allergies:', err);
+    return res.status(500).json({ error: 'ServerError', message: 'Failed to save allergies.' });
+  }
+});
+
+/**
+ * GET /api/meals/defaults
+ * Return the 12 default selectable meal suggestions with images and metadata
+ */
+app.get('/api/meals/defaults', (req, res) => {
+  try {
+    const meals = getDefaultMeals();
+    return res.status(200).json({ success: true, meals });
+  } catch (err) {
+    console.error('Error fetching default meals:', err);
+    return res.status(500).json({ error: 'ServerError', message: 'Failed to fetch default meals.' });
+  }
+});
+
+/**
+ * GET /api/meals/search?q=...
+ * Search meals by name, category, or ingredients
+ */
+app.get('/api/meals/search', (req, res) => {
+  try {
+    const query = req.query.q || '';
+    const meals = searchMeals(query);
+    return res.status(200).json({ success: true, meals });
+  } catch (err) {
+    console.error('Error searching meals:', err);
+    return res.status(500).json({ error: 'ServerError', message: 'Failed to search meals.' });
+  }
+});
+
+/**
+ * POST /api/recipes/personalize
+ * UNIFIED recipe personalization endpoint for BOTH default meals and searched meals.
+ * Retrieves authenticated user's allergies from database, detects allergens,
+ * intelligently substitutes with cross-validation, and returns full personalized recipe.
+ */
+app.post('/api/recipes/personalize', requireAuth, (req, res) => {
+  try {
+    const { meal } = req.body;
+    if (!meal || !meal.trim()) {
+      return res.status(400).json({ error: 'ValidationError', message: 'Meal name or selection is required.' });
+    }
+
+    // Always retrieve active allergies from user's database profile
+    const userAllergies = getUserAllergies(req.user.id);
+    const personalizedRecipe = personalizeRecipe(meal.trim(), userAllergies);
+
+    return res.status(200).json({
+      success: true,
+      recipe: personalizedRecipe
+    });
+  } catch (err) {
+    console.error('Recipe personalization error:', err);
+    return res.status(500).json({
+      error: 'ServerError',
+      message: 'An error occurred while generating the personalized recipe.'
+    });
+  }
 });
 
 // 5. Static Files Serving

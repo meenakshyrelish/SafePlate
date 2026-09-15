@@ -9,11 +9,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (res.ok) {
       const data = await res.json();
       if (data.authenticated && data.user) {
+        // Check if user has saved allergies
+        let hasAllergies = false;
+        try {
+          const aRes = await fetch('/api/user/allergies');
+          if (aRes.ok) {
+            const aData = await aRes.json();
+            hasAllergies = Array.isArray(aData.allergies) && aData.allergies.length > 0;
+          }
+        } catch {
+          // fallback
+        }
+
         // User is logged in
         if (navActions) {
           navActions.innerHTML = `
             <span class="nav-user-greeting">👋 Hi, ${escapeHtml(data.user.name)}</span>
-            <a href="allergy-select.html" class="nav-link nav-link-primary">Allergies</a>
+            <a href="meals.html" class="nav-link nav-link-primary">Discover Meals</a>
+            <a href="allergy-select.html" class="nav-link">Allergies</a>
             <button id="navLogoutBtn" class="nav-logout-btn">Log Out</button>
           `;
 
@@ -21,7 +34,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         if (getStartedBtn) {
-          getStartedBtn.href = 'allergy-select.html';
+          getStartedBtn.href = hasAllergies ? 'meals.html' : 'allergy-select.html';
         }
         return;
       }

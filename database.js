@@ -31,8 +31,17 @@ db.exec(`
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
   );
 
+  CREATE TABLE IF NOT EXISTS user_allergies (
+    user_id INTEGER NOT NULL,
+    allergy TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, allergy),
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+  );
+
   CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
   CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+  CREATE INDEX IF NOT EXISTS idx_user_allergies_user_id ON user_allergies(user_id);
 `);
 
 /**
@@ -136,6 +145,51 @@ function deleteSession(token) {
   deleteStmt.run(token);
 }
 
+/**
+ * Saves a user's selected allergies.
+ * Replaces existing allergy entries for the user.
+ * @param {number} userId 
+ * @param {string[]} allergies 
+ * @returns {string[]} Updated allergies array
+ */
+function setUserAllergies(userId, allergies) {
+  if (!userId) return [];
+  const cleanList = Array.isArray(allergies) 
+    ? [...new Set(allergies.map(a => String(a).trim()).filter(Boolean))]
+    : [];
+
+  // Transaction to replace allergies
+  db.exec('BEGIN TRANSACTION');
+  try {
+    db.prepare(`DELETE FROM user_allergies WHERE user_id = ?`).run(userId);
+    const insertStmt = db.prepare(`INSERT INTO user_allergies (user_id, allergy) VALUES (?, ?)`);
+    for (const allergy of cleanList) {
+      insertStmt.run(userId, allergy);
+    }
+    db.exec('COMMIT');
+  } catch (err) {
+    db.exec('ROLLBACK');
+    throw err;
+  }
+
+  return cleanList;
+}
+
+/**
+ * Retrieves all saved allergies for a user.
+ * @param {number} userId 
+ * @returns {string[]} Array of allergy names
+ */
+function getUserAllergies(userId) {
+  if (!userId) return [];
+  const query = db.prepare(`
+    SELECT allergy FROM user_allergies WHERE user_id = ? ORDER BY allergy ASC
+  `);
+  const rows = query.all ? query.all(userId) : [];
+  // For node:sqlite, query.all returns array of rows
+  return rows.map(r => r.allergy);
+}
+
 module.exports = {
   db,
   createUser,
@@ -143,5 +197,8 @@ module.exports = {
   findUserById,
   createSession,
   getSessionUser,
-  deleteSession
+  deleteSession,
+  setUserAllergies,
+  getUserAllergies
 };
+

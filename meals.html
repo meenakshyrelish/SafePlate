@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafePlate — Discover Meals</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="meals-body">
+
+  <!-- Top Navigation -->
+  <nav class="navbar navbar-light">
+    <div class="nav-brand-group">
+      <a href="index.html" class="logo-link">
+        <div class="logo">SafePlate</div>
+      </a>
+      <span class="brand-tagline">Allergy-Safe Meal Discovery</span>
+    </div>
+
+    <div class="nav-actions">
+      <div class="user-allergy-summary" id="userAllergySummary">
+        <span class="allergy-summary-label">Your Allergies:</span>
+        <span id="activeAllergiesBadge" class="allergy-tags-inline">Loading...</span>
+        <a href="allergy-select.html" class="edit-allergies-link" title="Edit your allergy profile">Edit</a>
+      </div>
+      <span class="nav-user-greeting" id="userGreeting"></span>
+      <button id="logoutBtn" class="nav-logout-btn">Log Out</button>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="meals-container">
+    <header class="meals-hero">
+      <h1 class="meals-title">What do you want to eat?</h1>
+      <p class="meals-subtitle">
+        Choose a favorite dish below or search for any meal. We'll personalize the recipe to be 100% free of your detected allergens!
+      </p>
+
+      <!-- Search Bar (Flow 2) -->
+      <div class="meal-search-wrapper">
+        <form id="mealSearchForm" class="meal-search-form" role="search">
+          <div class="search-input-group">
+            <svg class="search-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input 
+              type="text" 
+              id="mealSearchInput" 
+              class="meal-search-input" 
+              placeholder="Search dishes (e.g., Pizza, Biryani, Pasta, Tacos, Dosa...)" 
+              autocomplete="off"
+            >
+            <button type="button" id="clearSearchBtn" class="search-clear-btn" style="display: none;" title="Clear search">×</button>
+          </div>
+          <button type="submit" class="cta-btn search-submit-btn">Search</button>
+        </form>
+      </div>
+
+      <!-- Quick Category Filters -->
+      <div class="category-filters" id="categoryFilters">
+        <button class="filter-chip active" data-category="all">All Dishes</button>
+        <button class="filter-chip" data-category="Popular">Popular</button>
+        <button class="filter-chip" data-category="Italian">Italian</button>
+        <button class="filter-chip" data-category="Asian">Asian</button>
+        <button class="filter-chip" data-category="Indian">Indian</button>
+        <button class="filter-chip" data-category="Breakfast">Breakfast</button>
+        <button class="filter-chip" data-category="Healthy">Healthy</button>
+      </div>
+    </header>
+
+    <!-- Meal Cards Section (Flow 1 & Flow 2 Results) -->
+    <section class="meal-results-section">
+      <div class="section-header-bar">
+        <h2 class="section-heading" id="gridHeading">Popular Suggestions</h2>
+        <span class="results-count" id="resultsCount">12 meals available</span>
+      </div>
+
+      <!-- Grid of Selectable Meal Cards -->
+      <div class="meal-grid" id="mealGrid">
+        <div class="meal-grid-loading">Loading meal suggestions...</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Recipe Personalization Modal View -->
+  <div id="recipeModal" class="recipe-modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="modalRecipeTitle">
+    <div class="recipe-modal-card">
+      <button id="closeModalBtn" class="modal-close-btn" aria-label="Close modal">✕</button>
+
+      <!-- Modal Loading State -->
+      <div id="recipeLoadingState" class="recipe-loading-container" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Analyzing ingredients against your allergy profile...</p>
+        <p class="loading-subtext">Calculating safe, intelligent substitutions</p>
+      </div>
+
+      <!-- Modal Recipe Content -->
+      <div id="recipeContentState" class="recipe-content-container">
+        <!-- Injected dynamically by js/meals.js -->
+      </div>
+    </div>
+  </div>
+
+  <script src="js/meals.js"></script>
+</body>
+</html>
