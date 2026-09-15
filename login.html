@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafePlate — Log In</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    <nav class="auth-navbar">
+      <a href="index.html" class="logo-link">
+        <span class="logo logo-dark">SafePlate</span>
+      </a>
+    </nav>
+
+    <div class="auth-card-wrapper">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1 class="auth-title">Welcome Back</h1>
+          <p class="auth-subtitle">Log in to manage your food allergy preferences safely</p>
+        </div>
+
+        <div id="authAlert" class="auth-alert" style="display: none;" role="alert"></div>
+
+        <form id="loginForm" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              placeholder="you@example.com" 
+              autocomplete="email" 
+              required
+            >
+            <span class="field-error" id="emailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input" 
+              placeholder="Enter your password" 
+              autocomplete="current-password" 
+              required
+            >
+            <span class="field-error" id="passwordError"></span>
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="cta-btn auth-submit-btn">
+            Log In
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>Don't have an account? <a href="signup.html" class="auth-link">Sign up</a></p>
+          <p class="auth-subfooter"><a href="index.html" class="auth-back-link">← Back to Home</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>

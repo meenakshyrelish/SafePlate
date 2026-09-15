@@ -12,14 +12,20 @@
   <header class="hero">
     <nav class="navbar">
       <div class="logo">SafePlate</div>
+      <div class="nav-actions" id="navActions">
+        <!-- Filled dynamically by js/home.js -->
+        <a href="login.html" class="nav-link">Log In</a>
+        <a href="signup.html" class="nav-link nav-link-primary">Sign Up</a>
+      </div>
     </nav>
 
     <div class="hero-content">
       <h1 class="headline">Know Before You Bite</h1>
       <p class="subtext">Check your food, plan your meals — allergy-safe, always.</p>
-      <a href="allergy-select.html"><button class="cta-btn">Get Started</button></a>
+      <a href="allergy-select.html" id="getStartedBtn"><button class="cta-btn">Get Started</button></a>
     </div>
   </header>
 
+  <script src="js/home.js"></script>
 </body>
 </html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafePlate — Create Account</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    <nav class="auth-navbar">
+      <a href="index.html" class="logo-link">
+        <span class="logo logo-dark">SafePlate</span>
+      </a>
+    </nav>
+
+    <div class="auth-card-wrapper">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1 class="auth-title">Create an Account</h1>
+          <p class="auth-subtitle">Join SafePlate AI to keep every meal allergen-free and secure</p>
+        </div>
+
+        <div id="authAlert" class="auth-alert" style="display: none;" role="alert"></div>
+
+        <form id="signupForm" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name</label>
+            <input 
+              type="text" 
+              id="name" 
+              name="name" 
+              class="form-input" 
+              placeholder="e.g. Jane Doe" 
+              autocomplete="name" 
+              required
+            >
+            <span class="field-error" id="nameError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="form-input" 
+              placeholder="you@example.com" 
+              autocomplete="email" 
+              required
+            >
+            <span class="field-error" id="emailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password</label>
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="form-input" 
+              placeholder="At least 6 characters" 
+              autocomplete="new-password" 
+              required
+            >
+            <span class="field-error" id="passwordError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input 
+              type="password" 
+              id="confirmPassword" 
+              name="confirmPassword" 
+              class="form-input" 
+              placeholder="Re-enter your password" 
+              autocomplete="new-password" 
+              required
+            >
+            <span class="field-error" id="confirmPasswordError"></span>
+          </div>
+
+          <button type="submit" id="signupSubmitBtn" class="cta-btn auth-submit-btn">
+            Sign Up
+          </button>
+        </form>
+
+        <div class="auth-footer">
+          <p>Already have an account? <a href="login.html" class="auth-link">Log in</a></p>
+          <p class="auth-subfooter"><a href="index.html" class="auth-back-link">← Back to Home</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+</body>
+</html>
