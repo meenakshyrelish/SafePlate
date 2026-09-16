@@ -22,10 +22,227 @@
     <div class="hero-content">
       <h1 class="headline">Know Before You Bite</h1>
       <p class="subtext">Check your food, plan your meals — allergy-safe, always.</p>
-      <a href="allergy-select.html" id="getStartedBtn"><button class="cta-btn">Get Started</button></a>
+      
+      <div class="hero-actions-row">
+        <a href="allergy-select.html" id="getStartedBtn"><button class="cta-btn">Get Started</button></a>
+      </div>
+
+      <!-- Prominent Allergy First-Aid Assistant Home Card -->
+      <div class="first-aid-hero-card" id="openAssistantCard" role="button" tabindex="0">
+        <div class="first-aid-card-badge">First-Aid Support</div>
+        <div class="first-aid-card-content">
+          <div class="first-aid-card-icon">🩺</div>
+          <div class="first-aid-card-text">
+            <h2 class="first-aid-card-title">SafePlate Allergy First-Aid Assistant</h2>
+            <p class="first-aid-card-subtitle">Tell us what you're experiencing and get basic first-aid guidance.</p>
+          </div>
+        </div>
+        <button class="cta-btn first-aid-launch-btn" id="openAssistantBtn">
+          Launch First-Aid Assistant →
+        </button>
+      </div>
     </div>
   </header>
 
+  <!-- SafePlate Allergy First-Aid Assistant Modal Interface -->
+  <div id="assistantModal" class="assistant-modal-backdrop" style="display: none;" role="dialog" aria-modal="true" aria-labelledby="assistantModalTitle">
+    <div class="assistant-modal-card">
+      <button id="closeAssistantBtn" class="modal-close-btn" aria-label="Close Assistant">✕</button>
+
+      <!-- Assistant Header -->
+      <div class="assistant-header">
+        <div class="assistant-title-row">
+          <span class="assistant-title-icon">🩺</span>
+          <div>
+            <h2 id="assistantModalTitle" class="assistant-modal-title">SafePlate Allergy First-Aid Assistant</h2>
+            <p class="assistant-modal-desc">Practical non-medication guidance based on your symptoms and saved allergy profile.</p>
+          </div>
+        </div>
+
+        <!-- Mandatory Safety Disclaimer Notice -->
+        <div class="assistant-disclaimer-banner">
+          <span class="banner-icon">ℹ️</span>
+          <span><strong>Notice:</strong> SafePlate Allergy First-Aid Assistant provides general information based on the symptoms and allergy information you provide. It does not diagnose conditions, prescribe medicines, or replace professional medical care.</span>
+        </div>
+
+        <!-- User Allergy Profile Banner -->
+        <div class="assistant-profile-bar" id="assistantProfileBar">
+          <span class="profile-bar-label">Your Allergies:</span>
+          <span id="assistantAllergiesList" class="profile-bar-tags">Loading saved allergies...</span>
+          <a href="allergy-select.html" class="profile-bar-edit" id="editProfileLink">Edit Profile</a>
+        </div>
+      </div>
+
+      <!-- Assistant Main Scrollable Container -->
+      <div class="assistant-body">
+
+        <!-- STEP 1: Symptom Survey Form -->
+        <div id="symptomSurveyView" class="assistant-view">
+          <div class="survey-instructions">
+            <h3>Symptom Survey</h3>
+            <p>Select all symptoms you or the person are currently experiencing:</p>
+          </div>
+
+          <form id="symptomSurveyForm" class="symptom-form" novalidate>
+            <!-- SKIN CATEGORY -->
+            <div class="symptom-category-card">
+              <div class="category-header">
+                <span class="cat-icon">🧴</span>
+                <h4>SKIN</h4>
+              </div>
+              <div class="symptom-checkbox-grid">
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Itching"> <span>Itching</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Hives"> <span>Hives</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Rash"> <span>Rash</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Redness"> <span>Redness</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Swelling"> <span>Swelling</span></label>
+              </div>
+            </div>
+
+            <!-- MOUTH / THROAT CATEGORY -->
+            <div class="symptom-category-card">
+              <div class="category-header">
+                <span class="cat-icon">👄</span>
+                <h4>MOUTH / THROAT</h4>
+              </div>
+              <div class="symptom-checkbox-grid">
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Tingling or itching in mouth"> <span>Tingling or itching in mouth</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Swollen lips"> <span>Swollen lips</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Swollen tongue"> <span>Swollen tongue ⚠️</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Throat tightness"> <span>Throat tightness ⚠️</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Difficulty swallowing"> <span>Difficulty swallowing ⚠️</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Hoarse voice"> <span>Hoarse voice ⚠️</span></label>
+              </div>
+            </div>
+
+            <!-- BREATHING CATEGORY -->
+            <div class="symptom-category-card">
+              <div class="category-header">
+                <span class="cat-icon">🫁</span>
+                <h4>BREATHING</h4>
+              </div>
+              <div class="symptom-checkbox-grid">
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Coughing"> <span>Coughing</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Wheezing"> <span>Wheezing ⚠️</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Shortness of breath"> <span>Shortness of breath ⚠️</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Difficulty breathing"> <span>Difficulty breathing ⚠️</span></label>
+              </div>
+            </div>
+
+            <!-- STOMACH CATEGORY -->
+            <div class="symptom-category-card">
+              <div class="category-header">
+                <span class="cat-icon">🫧</span>
+                <h4>STOMACH</h4>
+              </div>
+              <div class="symptom-checkbox-grid">
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Nausea"> <span>Nausea</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Vomiting"> <span>Vomiting</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Stomach pain"> <span>Stomach pain</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Diarrhea"> <span>Diarrhea</span></label>
+              </div>
+            </div>
+
+            <!-- GENERAL CATEGORY -->
+            <div class="symptom-category-card">
+              <div class="category-header">
+                <span class="cat-icon">⚡</span>
+                <h4>GENERAL</h4>
+              </div>
+              <div class="symptom-checkbox-grid">
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Dizziness"> <span>Dizziness ⚠️</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Feeling faint"> <span>Feeling faint ⚠️</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Fainting"> <span>Fainting ⚠️</span></label>
+                <label class="symptom-chip"><input type="checkbox" name="symptom" value="Weakness"> <span>Weakness</span></label>
+                <label class="symptom-chip severe-tag"><input type="checkbox" name="symptom" value="Symptoms getting worse quickly"> <span>Symptoms getting worse quickly ⚠️</span></label>
+              </div>
+            </div>
+
+            <!-- Additional Questions -->
+            <div class="survey-questions-card">
+              <div class="form-group">
+                <label for="onsetTimeSelect" class="form-label">When did the symptoms start?</label>
+                <select id="onsetTimeSelect" class="form-input">
+                  <option value="Just now (within the last 15 minutes)">Just now (within the last 15 minutes)</option>
+                  <option value="15 to 60 minutes ago">15 to 60 minutes ago</option>
+                  <option value="1 to 2 hours ago">1 to 2 hours ago</option>
+                  <option value="More than 2 hours ago">More than 2 hours ago</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="foodExposureInput" class="form-label">
+                  Did this happen after eating or coming into contact with a food you may be allergic to?
+                </label>
+                <input 
+                  type="text" 
+                  id="foodExposureInput" 
+                  class="form-input" 
+                  placeholder="e.g. Ate a chocolate cookie 20 minutes ago, or drank a smoothie"
+                >
+                <span class="field-hint">Mention the food item or environment if known.</span>
+              </div>
+            </div>
+
+            <div id="surveyValidationError" class="field-error-banner" style="display: none;"></div>
+
+            <button type="submit" id="submitSurveyBtn" class="cta-btn submit-survey-btn">
+              Assess Symptoms & Get First-Aid Guidance →
+            </button>
+          </form>
+        </div>
+
+        <!-- STEP 2: Guidance Results View (Emergency OR Non-Emergency 7 Sections) -->
+        <div id="guidanceResultView" class="assistant-view" style="display: none;">
+          <!-- Content populated dynamically by js/assistant.js -->
+        </div>
+
+        <!-- STEP 3: Chatbot Follow-Up Section -->
+        <div id="chatbotSection" class="chatbot-container" style="display: none;">
+          <div class="chat-header-bar">
+            <h4>💬 Follow-Up Questions</h4>
+            <span class="chat-header-sub">Ask about monitoring, non-medication comfort, or when to seek care</span>
+          </div>
+
+          <div class="chat-messages-feed" id="chatMessagesFeed">
+            <!-- Messages added dynamically -->
+          </div>
+
+          <!-- Quick Suggestion Chips -->
+          <div class="quick-question-chips" id="quickChips">
+            <button class="quick-chip" data-q="What warning signs should I watch for?">What warning signs should I watch for?</button>
+            <button class="quick-chip" data-q="What if my itching is getting worse?">What if my itching is getting worse?</button>
+            <button class="quick-chip" data-q="How can I prevent this next time?">How can I prevent this next time?</button>
+          </div>
+
+          <form id="assistantChatForm" class="chat-input-row">
+            <input 
+              type="text" 
+              id="assistantChatInput" 
+              class="form-input chat-input-field" 
+              placeholder="Ask a follow-up question (e.g., 'My itching is spreading', 'Can I rinse with water?')..." 
+              autocomplete="off"
+            >
+            <button type="submit" class="cta-btn chat-send-btn" id="sendChatBtn">Send</button>
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Assistant Footer Actions -->
+      <div class="assistant-footer">
+        <button type="button" id="startOverBtn" class="cta-btn secondary-btn" style="display: none;">
+          ↺ Start Over / New Survey
+        </button>
+        <button type="button" class="cta-btn" onclick="document.getElementById('assistantModal').style.display='none'; document.body.style.overflow='auto';">
+          Close Assistant
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <script src="js/home.js"></script>
+  <script src="js/assistant.js"></script>
 </body>
 </html>

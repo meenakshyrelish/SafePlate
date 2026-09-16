@@ -22,6 +22,14 @@ const {
   personalizeRecipe
 } = require('./recipes.js');
 
+const {
+  evaluateEmergencyRisk,
+  buildEmergencyGuidance,
+  buildNonEmergencyGuidance,
+  handleAssistantChat,
+  formatAllergiesDisplay
+} = require('./assistant-engine.js');
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const SESSION_SECRET = process.env.SESSION_SECRET || 'safeplate_super_secret_key_development';
@@ -360,6 +368,123 @@ app.post('/api/recipes/personalize', requireAuth, (req, res) => {
       error: 'ServerError',
       message: 'An error occurred while generating the personalized recipe.'
     });
+  }
+});
+
+/**
+ * GET /api/assistant/profile
+ * Retrieve user's saved allergies from database for First-Aid Assistant
+ */
+app.get('/api/assistant/profile', (req, res) => {
+  try {
+    if (req.user) {
+      const allergies = getUserAllergies(req.user.id);
+      return res.status(200).json({
+        authenticated: true,
+        user: { id: req.user.id, name: req.user.name },
+        allergies,
+        formattedAllergies: formatAllergiesDisplay(allergies)
+      });
+    }
+    return res.status(200).json({
+      authenticated: false,
+      user: null,
+      allergies: [],
+      formattedAllergies: 'None recorded (Guest)'
+    });
+  } catch (err) {
+    console.error('Error fetching assistant profile:', err);
+    return res.status(500).json({ error: 'ServerError', message: 'Failed to retrieve profile.' });
+  }
+});
+
+/**
+ * POST /api/assistant/assess
+ * Evaluates symptoms, executes deterministic emergency triage FIRST,
+ * and generates structured non-medication first-aid guidance.
+ */
+app.post('/api/assistant/assess', (req, res) => {
+  try {
+    const { symptoms, onsetTime, foodContact } = req.body;
+
+    if ((!symptoms || symptoms.length === 0) && (!foodContact || !foodContact.trim())) {
+      return res.status(400).json({
+        error: 'ValidationError',
+        message: 'Please select at least one symptom or describe your suspected food exposure.'
+      });
+    }
+
+    // Retrieve user allergies from database if authenticated
+    let userAllergies = [];
+    if (req.user) {
+      userAllergies = getUserAllergies(req.user.id);
+    }
+
+    // 1. DETERMINISTIC EMERGENCY TRIAGE - Executed BEFORE normal response!
+    const emergencyRisk = evaluateEmergencyRisk(symptoms, { onsetTime, foodContact });
+
+    if (emergencyRisk.isEmergency) {
+      const emergencyGuidance = buildEmergencyGuidance(emergencyRisk.emergencyReasons, userAllergies);
+      return res.status(200).json({
+        success: true,
+        isEmergency: true,
+        guidance: emergencyGuidance
+      });
+    }
+
+    // 2. Non-emergency structured first-aid guidance
+    const normalGuidance = buildNonEmergencyGuidance({
+      symptoms,
+      onsetTime,
+      foodContact,
+      userAllergies
+    });
+
+    return res.status(200).json({
+      success: true,
+      isEmergency: false,
+      guidance: normalGuidance
+    });
+
+  } catch (err) {
+    console.error('Error assessing allergy symptoms:', err);
+    return res.status(500).json({
+      error: 'ServerError',
+      message: 'An error occurred while assessing symptoms.'
+    });
+  }
+});
+
+/**
+ * POST /api/assistant/chat
+ * Handles follow-up conversational questions with dynamic emergency monitoring
+ * and zero medication recommendations.
+ */
+app.post('/api/assistant/chat', (req, res) => {
+  try {
+    const { message, sessionContext } = req.body;
+    if (!message || !message.trim()) {
+      return res.status(400).json({ error: 'ValidationError', message: 'Message cannot be empty.' });
+    }
+
+    let userAllergies = [];
+    if (req.user) {
+      userAllergies = getUserAllergies(req.user.id);
+    }
+
+    const chatResponse = handleAssistantChat({
+      userMessage: message.trim(),
+      sessionContext: sessionContext || {},
+      userAllergies
+    });
+
+    return res.status(200).json({
+      success: true,
+      ...chatResponse
+    });
+  } catch (err) {
+    console.error('Error in assistant chat:', err);
+    return res.status(500).json({ error: 'ServerError', message: 'Failed to process chat message.' });
   }
 });
 
